@@ -15,9 +15,14 @@ export const typeDefs = gql`
         ratingInfo: Rating
     }
 
+    type RoomsPagination {
+        data: [Room]
+        hasMore: Boolean
+    }
+
     type Query {
-        rooms: [Room]   
-        room(id: ID): Room
+        rooms(start: Int, end: Int): RoomsPagination 
+        room(id: ID!): Room
     }
 `;
 
@@ -26,6 +31,11 @@ export const resolvers = {
         room: (_, args) => {
             return ROOMS_DATA.find(room => room.id === +args.id);
         },
-        rooms: () => ROOMS_DATA,
+        rooms: (_, args) => {
+            return {
+                data: ROOMS_DATA.slice(args.start || 0, args.end || ROOMS_DATA.length),
+                hasMore: !!(args.end && args.end < ROOMS_DATA.length)
+            }
+        },
     }
 };
