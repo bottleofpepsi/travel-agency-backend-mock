@@ -10,9 +10,14 @@ import "dotenv/config";
 
 
 const PORT = process.env.PORT;
+const CLIENT_URL = process.env.CLIENT_URL;
+
+const ALLOWED_ORIGINS = ["http://client:3000", "http://localhost:3000"]
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: ALLOWED_ORIGINS
+}));
 app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
